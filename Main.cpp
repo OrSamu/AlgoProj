@@ -45,7 +45,19 @@ int main(int argc, char* argv[])
 	}
 	case 2:
 	{
+		NeighborsMatrice(edges_p);
+		break;
+	}
+	case 3:
+	{
+		AYZ(edges_p);
+		break;
+	}
+	case 4:
+	{
 		NeighborsList(edges_p);
+		NeighborsMatrice(edges_p);
+		AYZ(edges_p);
 		break;
 	}
 	default:
