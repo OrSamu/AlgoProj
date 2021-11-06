@@ -1,4 +1,0 @@
-﻿  Main.cpp
-S:\Dev\MTA\AlgoProj\Main.cpp(6,1): warning C4005: '_CRT_SECURE_NO_WARNINGS': macro redefinition
-S:\Dev\MTA\AlgoProj\Main.cpp : message : see previous definition of '_CRT_SECURE_NO_WARNINGS'
-  AlgoProj.vcxproj -> S:\Dev\MTA\AlgoProj\Debug\AlgoProj.exe
