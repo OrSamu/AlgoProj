@@ -2,8 +2,8 @@
 #include <fstream>
 #include <cstdlib>
 #include "Edge.h"
-
-#define _CRT_SECURE_NO_WARNINGS
+#include "Graph.h"
+#include "Algorithms.h"
 
 using namespace std;
 
@@ -14,11 +14,12 @@ int main(int argc, char* argv[])
 	int algoId;
 	int numOfVertices;
 	int numOfEdges;
-	//TODO: Change to Vector
+	string triangleName;
 	Edge* edges_p;
-
 	FILE* inputFile;
 	ofstream outputFile;
+	Algorithms algoTool;
+	
 
 	inputFile = fopen(argv[1], "r");
 
@@ -33,38 +34,45 @@ int main(int argc, char* argv[])
 	edges_p = (Edge*)malloc(sizeof(Edge) * numOfVertices * numOfVertices);
 
 	numOfEdges = inputEdges(inputFile, edges_p, numOfVertices);
+	fclose(inputFile);
 
 	(Edge*)realloc(edges_p, sizeof(Edge) * numOfEdges);
 
+	Graph inputGraph(edges_p, numOfVertices, numOfEdges);
+	
 	switch (algoId)
 	{
 	case 1:
 	{
-		NeighborsList(edges_p);
+		triangleName = algoTool.ListAlgo(inputGraph);
 		break;
 	}
 	case 2:
 	{
-		NeighborsMatrice(edges_p);
+		triangleName = algoTool.MatriceAlgo(inputGraph);
 		break;
 	}
 	case 3:
 	{
-		AYZ(edges_p);
+		triangleName = algoTool.AYZAlgo(inputGraph);
 		break;
 	}
 	case 4:
 	{
-		NeighborsList(edges_p);
-		NeighborsMatrice(edges_p);
-		AYZ(edges_p);
+		algoTool.ListAlgo(inputGraph);
+		algoTool.MatriceAlgo(inputGraph);
+		triangleName = algoTool.AYZAlgo(inputGraph);
 		break;
 	}
 	default:
 		break;
 	}
 	
-	fclose(inputFile);
+	outputFile.open(argv[2], ios_base::trunc);
+	
+	outputFile << triangleName;
+	
+	outputFile.close();
 }
 
 int inputEdges(FILE* inputFile, Edge* edges_p, int numOfVertices)
