@@ -9,14 +9,16 @@ Graph::Graph(Edge* edges, int numOfVertice, int numOfEdges)
 
 Graph::~Graph()
 {
-	for (int i = 0; i < Neighbours_List.size(); i++)
-	{
-		Neighbours_List[i].~list();
-	}
-	
-	for (int i = 0; i < verticesNum; ++i)
-		delete[] Neighbours_Matrice[i];
-	delete[] Neighbours_Matrice;
+	//for (int i = 0; i < Neighbours_List.size(); i++)
+	//{
+	//	Neighbours_List[i].~list();
+	//}
+	//
+	//for (int i = 0; i < verticesNum; ++i)
+	//{
+	//	delete[] Neighbours_Matrice[i];
+	//}
+	//delete[] Neighbours_Matrice;
 }
 
 map<int, list<int>> Graph::GetListGraph()
