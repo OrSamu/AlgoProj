@@ -32,36 +32,40 @@ string Algorithms::ListAlgo(Graph inputGraph)
 string Algorithms::MatriceAlgo(Graph inputGraph)
 {
 	int** matriceGraph = inputGraph.GetMatriceGraph();
-	int** gPowIn2, **gPowIn3;
+	int size = inputGraph.GetSize() + 1;
+	int **gPowIn2 = createEmptyMatrice(size);
+	int **gPowIn3 = createEmptyMatrice(size);
 	int A = NULL;
 	int B = NULL;
 	int C = NULL;
-	int size = inputGraph.GetSize() + 1;
+	
 	string triangle="";
-	gPowIn2 = multiply(matriceGraph, matriceGraph,size);
-	gPowIn3 = multiply(matriceGraph, gPowIn2,size);
-	for (int i = 1; i <= size; i++)
+	matriceMultiply(gPowIn2, matriceGraph, matriceGraph,size);
+	matriceMultiply(gPowIn3, gPowIn2, matriceGraph,size);
+
+	for (int i = 1; i < size; i++)
 	{
 		if (gPowIn3[i][i] > 0)
 		{
-			A = gPowIn3[i][i];
+			A = i;
 			break;
 		}
 	}
 	if (A != NULL)
 	{
-		for (int i = 1; i <= size; i++)
+		for (int i = 1; i < size; i++)
 		{
 			if (i != A && gPowIn2[i][A] != 0)
 			{
 				if (matriceGraph[A][i] != 0)
 				{
 					B = i;
-					for (int j = 0; j <= size; j++)
+					for (int j = 0; j < size; j++)
 					{
 						if (matriceGraph[B][j] != 0 && matriceGraph[j][A] != 0)
 						{
 							C = j;
+							break;
 						}
 					}
 				}
@@ -71,8 +75,8 @@ string Algorithms::MatriceAlgo(Graph inputGraph)
 	}
 	else triangle = "NO";
 
-	releaseMatrice(gPowIn2,size);
-	releaseMatrice(gPowIn3,size);
+	releaseMatrice(gPowIn2, size);
+	releaseMatrice(gPowIn3, size);
 
 	return triangle;
 }
@@ -82,25 +86,36 @@ string Algorithms::AYZAlgo(Graph inputGraph)
 	return "NO";
 }
 
-int** multiply(int** a, int** b, int size)
+int** Algorithms::createEmptyMatrice(int size)
 {
 	int** mul = new int* [size];
-	for (int i = 0; i <= size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		mul[i] = new int[size];
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < size; j++)
 		{
 			mul[i][j] = 0;
-			for (int k = 0; k < 3; k++)
-				mul[i][j] += a[i][k] * b[k][j];
 		}
 	}
 	return mul;
 }
 
-void releaseMatrice(int **matriceToRelease,int size)
+void Algorithms::matriceMultiply(int** res,int** m1, int** m2, int size)
 {
-	for (int i = 0; i <= size; i++)
+	for (int i = 0; i < size; i++) {
+		for (int j = 0; j < size; j++) {
+			int sum = 0;
+			for (int k = 0; k < size; k++) {
+				sum += (m1[i][k] * m2[k][j]);
+			}
+			res[i][j] = sum;
+		}
+	}
+}
+
+void Algorithms::releaseMatrice(int** matriceToRelease, int size)
+{
+	for (int i = 0; i < size; i++)
 	{
 		delete[] matriceToRelease[i];
 	}
