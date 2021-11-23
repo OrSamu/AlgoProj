@@ -18,5 +18,9 @@ public:
 	~Graph();
 	map<int, list<int>> GetListGraph();
 	int** GetMatriceGraph();
+	int GetSize()
+	{
+		return verticesNum;
+	}
 };
 
