@@ -50,7 +50,8 @@ int main(int argc, char* argv[])
 	}
 	case 2:
 	{
-		triangleName = algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(),inputGraph.GetSize()+1);
+		map<int, int> emptyMap;
+		triangleName = algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(),inputGraph.GetSize()+1, emptyMap);
 		break;
 	}
 	case 3:
@@ -61,8 +62,9 @@ int main(int argc, char* argv[])
 	}
 	case 4:
 	{
+		map<int, int> emptyMap;
 		triangleName = algoTool.ListAlgo(inputGraph) + " \n";
-		triangleName += algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(), inputGraph.GetSize() + 1) + "\n";
+		triangleName += algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(), inputGraph.GetSize() + 1, emptyMap) + "\n";
 		triangleName += algoTool.AYZAlgo(inputGraph, pow(numOfEdges, 0.5));
 		break;
 	}

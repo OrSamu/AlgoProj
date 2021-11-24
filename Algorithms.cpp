@@ -29,7 +29,7 @@ string Algorithms::ListAlgo(Graph inputGraph)
 	return "NO";
 }
 
-string Algorithms::MatriceAlgo(int **inputMatrice,int size)
+string Algorithms::MatriceAlgo(int **inputMatrice,int size,map<int,int> dictinoary)
 {
 	int** gPowIn2 = utils::createEmptyMatrice(size);
 	int** gPowIn3 = utils::createEmptyMatrice(size);
@@ -68,6 +68,12 @@ string Algorithms::MatriceAlgo(int **inputMatrice,int size)
 					}
 				}
 			}
+		}
+		if (!dictinoary.empty())
+		{
+			A = dictinoary.find(A)->second;
+			B = dictinoary.find(B)->second;
+			C = dictinoary.find(C)->second;
 		}
 		triangle = to_string(A) + " " + to_string(B) + " " + to_string(C);
 	}
@@ -122,8 +128,8 @@ string Algorithms::AYZAlgo(Graph inputGraph, int delta)
 
 	int deltaGraphSize = numOfVartices - smallKodkods + 1;
 	int** deltaGraph = utils::createEmptyMatrice(deltaGraphSize);
-	inputGraph.CreateDeltaGraph(deltaGraph, delta);
-	string triangle = MatriceAlgo(deltaGraph, deltaGraphSize);
+	map<int, int> dictinoary = inputGraph.CreateDeltaGraph(deltaGraph, delta);
+	string triangle = MatriceAlgo(deltaGraph, deltaGraphSize, dictinoary);
 	utils::releaseMatrice(deltaGraph, deltaGraphSize);
 	
 	return triangle;

@@ -17,11 +17,10 @@ private:
 
 public:
 	Graph(Edge* edges, int numOfVertice, int numOfEdges);
-	~Graph();
 	map<int, list<int>> GetListGraph();
 	int** GetMatriceGraph();
 	void FilterEdge(int source, int dest);
-	void CreateDeltaGraph(int** output, int delta);
+	map<int, int> CreateDeltaGraph(int** output, int delta);
 	int GetSize()
 	{
 		return verticesNum;
