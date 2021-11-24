@@ -6,25 +6,6 @@ Graph::Graph(Edge* edges, int numOfVertices, int numOfEdges)
 	CreateDataStructures(edges, numOfVertices,numOfEdges);
 }
 
-Graph::~Graph()
-{
-	//for (int i = 0; i < Neighbours_List.size(); i++)
-	//{
-	//	Neighbours_List[i].~list();
-	//}
-	//
-	//for (int i = 0; i < verticesNum; ++i)
-	//{
-	//	delete[] Neighbours_Matrice[i];
-	//}
-	//delete[] Neighbours_Matrice;
-}
-
-// release linkedlists
-// relase matrice - has already
-// release rankedVertica
-// use them both
-
 map<int, list<int>> Graph::GetListGraph()
 {
 	return Neighbours_List;
@@ -71,7 +52,7 @@ void Graph::FilterEdge(int source, int dest)
 	verticesRank[dest]++;
 }
 
-void Graph::CreateDeltaGraph(int** output,int delta) 
+map<int, int> Graph::CreateDeltaGraph(int** output,int delta)
 {
 	map<int, int> gTag2gMap;
 	int shift = 0;
@@ -83,7 +64,7 @@ void Graph::CreateDeltaGraph(int** output,int delta)
 		}
 		else
 		{
-			gTag2gMap.insert(make_pair(i - shift, i));
+			gTag2gMap.insert(make_pair(i - shift,i));
 		}
 	}
 	
@@ -94,4 +75,6 @@ void Graph::CreateDeltaGraph(int** output,int delta)
 			output[currSource.first][currDest.first] = Neighbours_Matrice[currSource.second][currDest.second];
 		}
 	}
+
+	return gTag2gMap;
 }

@@ -1,4 +1,9 @@
 #pragma once
+#include <string>
+#include <map>
+#include <sstream>
+using namespace std;
+
 class utils
 {
 public:
