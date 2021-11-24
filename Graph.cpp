@@ -1,10 +1,9 @@
 #include "Graph.h"
 
-Graph::Graph(Edge* edges, int numOfVertice, int numOfEdges)
+Graph::Graph(Edge* edges, int numOfVertices, int numOfEdges)
 {
-	verticesNum = numOfVertice;
-	CreateList(edges, numOfEdges);
-	CreateMatrice(edges, numOfVertice, numOfEdges);
+	verticesNum = numOfVertices;
+	CreateDataStructures(edges, numOfVertices,numOfEdges);
 }
 
 Graph::~Graph()
@@ -21,6 +20,11 @@ Graph::~Graph()
 	//delete[] Neighbours_Matrice;
 }
 
+// release linkedlists
+// relase matrice - has already
+// release rankedVertica
+// use them both
+
 map<int, list<int>> Graph::GetListGraph()
 {
 	return Neighbours_List;
@@ -31,9 +35,14 @@ int** Graph::GetMatriceGraph()
 	return Neighbours_Matrice;
 }
 
-void Graph::CreateList(Edge* edges, int numOfEdges)
+void Graph::CreateDataStructures(Edge* edges, int numOfVertices, int numOfEdges)
 {
 	int currSource, currDest;
+	int allocateSize = numOfVertices + 1;
+
+	Neighbours_Matrice = utils::createEmptyMatrice(allocateSize);
+	verticesRank = new int[numOfVertices + 1]{};
+
 	for (int i = 0; i < numOfEdges; i++)
 	{
 		currSource = edges[i].GetSource();
@@ -50,29 +59,39 @@ void Graph::CreateList(Edge* edges, int numOfEdges)
 		{
 			Neighbours_List[currSource].push_back(currDest);
 		}
+
+		Neighbours_Matrice[currSource][currDest] = 1;
+		FilterEdge(currSource, currDest);
 	}
 }
 
-void Graph::CreateMatrice(Edge* edges, int numOfVertices, int numOfEdges)
+void Graph::FilterEdge(int source, int dest)
 {
-	int allocateSize = numOfVertices + 1;
-	Neighbours_Matrice = new int*[allocateSize];
-	int currSource, currDest;
+	verticesRank[source]++;
+	verticesRank[dest]++;
+}
 
-	for (int i = 0; i < allocateSize; i++)
+void Graph::CreateDeltaGraph(int** output,int delta) 
+{
+	map<int, int> gTag2gMap;
+	int shift = 0;
+	for (int i = 1; i < verticesNum+1; i++)
 	{
-		Neighbours_Matrice[i] = new int[allocateSize];
-		for (int j = 0; j < allocateSize; j++)
+		if (verticesRank[i] <= delta)
 		{
-			Neighbours_Matrice[i][j] = 0;
+			shift++;
+		}
+		else
+		{
+			gTag2gMap.insert(make_pair(i - shift, i));
 		}
 	}
-
-	for (int i = 0; i < numOfEdges; i++)
+	
+	for (pair<int, int> currSource : gTag2gMap)
 	{
-		currSource = edges[i].GetSource();
-		currDest = edges[i].GetDest();
-
-		Neighbours_Matrice[currSource][currDest] = 1;
+		for (pair<int, int> currDest : gTag2gMap)
+		{
+			output[currSource.first][currDest.first] = Neighbours_Matrice[currSource.second][currDest.second];
+		}
 	}
 }
