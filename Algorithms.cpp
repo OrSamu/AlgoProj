@@ -38,8 +38,8 @@ string Algorithms::MatriceAlgo(int **inputMatrice,int size)
 	int C = NULL;
 
 	string triangle = "";
-	matriceMultiply(gPowIn2, inputMatrice, inputMatrice, size);
-	matriceMultiply(gPowIn3, gPowIn2, inputMatrice, size);
+	utils::matriceMultiply(gPowIn2, inputMatrice, inputMatrice, size);
+	utils::matriceMultiply(gPowIn3, gPowIn2, inputMatrice, size);
 
 	for (int i = 1; i < size; i++)
 	{
@@ -73,8 +73,8 @@ string Algorithms::MatriceAlgo(int **inputMatrice,int size)
 	}
 	else triangle = "NO";
 
-	releaseMatrice(gPowIn2, size);
-	releaseMatrice(gPowIn3, size);
+	utils::releaseMatrice(gPowIn2, size);
+	utils::releaseMatrice(gPowIn3, size);
 
 	return triangle;
 }
@@ -120,29 +120,11 @@ string Algorithms::AYZAlgo(Graph inputGraph, int delta)
 
 	}
 
-	int** deltaGraph = utils::createEmptyMatrice(numOfVartices-smallKodkods+1);
-	int deltaGraphSize=inputGraph.CreateDeltaGraph(deltaGraph, delta);
-	return MatriceAlgo(deltaGraph, deltaGraphSize+1);
-}
-
-void Algorithms::matriceMultiply(int** res, int** m1, int** m2, int size)
-{
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < size; j++) {
-			int sum = 0;
-			for (int k = 0; k < size; k++) {
-				sum += (m1[i][k] * m2[k][j]);
-			}
-			res[i][j] = sum;
-		}
-	}
-}
-
-void Algorithms::releaseMatrice(int** matriceToRelease, int size)
-{
-	for (int i = 0; i < size; i++)
-	{
-		delete[] matriceToRelease[i];
-	}
-	delete[] matriceToRelease;
+	int deltaGraphSize = numOfVartices - smallKodkods + 1;
+	int** deltaGraph = utils::createEmptyMatrice(deltaGraphSize);
+	inputGraph.CreateDeltaGraph(deltaGraph, delta);
+	string triangle = MatriceAlgo(deltaGraph, deltaGraphSize);
+	utils::releaseMatrice(deltaGraph, deltaGraphSize);
+	
+	return triangle;
 }

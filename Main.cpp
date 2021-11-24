@@ -61,9 +61,9 @@ int main(int argc, char* argv[])
 	}
 	case 4:
 	{
-		algoTool.ListAlgo(inputGraph);
-		algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(), inputGraph.GetSize() + 1);
-		triangleName = algoTool.AYZAlgo(inputGraph, pow(numOfEdges, 0.5));
+		triangleName = algoTool.ListAlgo(inputGraph) + " \n";
+		triangleName += algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(), inputGraph.GetSize() + 1) + "\n";
+		triangleName += algoTool.AYZAlgo(inputGraph, pow(numOfEdges, 0.5));
 		break;
 	}
 	default:

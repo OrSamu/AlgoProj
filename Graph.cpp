@@ -1,11 +1,9 @@
 #include "Graph.h"
 
-Graph::Graph(Edge* edges, int numOfVertice, int numOfEdges)
+Graph::Graph(Edge* edges, int numOfVertices, int numOfEdges)
 {
-	verticesNum = numOfVertice;
-	CreateList(edges, numOfEdges);
-	CreateMatrice(edges, numOfVertice, numOfEdges);
-	filterVertices(edges, numOfVertice, numOfEdges);
+	verticesNum = numOfVertices;
+	CreateDataStructures(edges, numOfVertices,numOfEdges);
 }
 
 Graph::~Graph()
@@ -22,6 +20,11 @@ Graph::~Graph()
 	//delete[] Neighbours_Matrice;
 }
 
+// release linkedlists
+// relase matrice - has already
+// release rankedVertica
+// use them both
+
 map<int, list<int>> Graph::GetListGraph()
 {
 	return Neighbours_List;
@@ -32,9 +35,14 @@ int** Graph::GetMatriceGraph()
 	return Neighbours_Matrice;
 }
 
-void Graph::CreateList(Edge* edges, int numOfEdges)
+void Graph::CreateDataStructures(Edge* edges, int numOfVertices, int numOfEdges)
 {
 	int currSource, currDest;
+	int allocateSize = numOfVertices + 1;
+
+	Neighbours_Matrice = utils::createEmptyMatrice(allocateSize);
+	verticesRank = new int[numOfVertices + 1]{};
+
 	for (int i = 0; i < numOfEdges; i++)
 	{
 		currSource = edges[i].GetSource();
@@ -51,49 +59,19 @@ void Graph::CreateList(Edge* edges, int numOfEdges)
 		{
 			Neighbours_List[currSource].push_back(currDest);
 		}
-	}
-}
-
-void Graph::CreateMatrice(Edge* edges, int numOfVertices, int numOfEdges)
-{
-
-
-	int allocateSize = numOfVertices + 1;
-	Neighbours_Matrice = new int*[allocateSize];
-	int currSource, currDest;
-
-	for (int i = 0; i < allocateSize; i++)
-	{
-		Neighbours_Matrice[i] = new int[allocateSize];
-		for (int j = 0; j < allocateSize; j++)
-		{
-			Neighbours_Matrice[i][j] = 0;
-		}
-	}
-
-	for (int i = 0; i < numOfEdges; i++)
-	{
-		currSource = edges[i].GetSource();
-		currDest = edges[i].GetDest();
 
 		Neighbours_Matrice[currSource][currDest] = 1;
+		FilterEdge(currSource, currDest);
 	}
 }
 
-void Graph::filterVertices(Edge* edges, int numOfVertice, int numOfEdges)
+void Graph::FilterEdge(int source, int dest)
 {
-	verticesRank = new int[numOfVertice + 1]{};
-	int source, dest;
-	for (int i = 0; i < numOfEdges; i++)
-	{
-		source = edges[i].GetSource();
-		dest = edges[i].GetDest();
-		verticesRank[source]++;
-		verticesRank[dest]++;
-	}
+	verticesRank[source]++;
+	verticesRank[dest]++;
 }
 
-int Graph::CreateDeltaGraph(int** output,int delta) 
+void Graph::CreateDeltaGraph(int** output,int delta) 
 {
 	map<int, int> gTag2gMap;
 	int shift = 0;
@@ -116,6 +94,4 @@ int Graph::CreateDeltaGraph(int** output,int delta)
 			output[currSource.first][currDest.first] = Neighbours_Matrice[currSource.second][currDest.second];
 		}
 	}
-
-	return gTag2gMap.size();
 }

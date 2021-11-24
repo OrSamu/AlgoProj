@@ -11,8 +11,7 @@ private:
 	int verticesNum;
 	map<int,list<int>> Neighbours_List;
 	int** Neighbours_Matrice;
-	void CreateList(Edge* edges, int numOfEdges);
-	void CreateMatrice(Edge* edges, int numOfVertice, int numOfEdges);
+	void CreateDataStructures(Edge* edges, int numOfVertice, int numOfEdges);
 	int *verticesRank;
 
 
@@ -21,8 +20,8 @@ public:
 	~Graph();
 	map<int, list<int>> GetListGraph();
 	int** GetMatriceGraph();
-	void filterVertices(Edge* edges, int numOfVertice, int numOfEdges);
-	int CreateDeltaGraph(int** output, int delta);
+	void FilterEdge(int source, int dest);
+	void CreateDeltaGraph(int** output, int delta);
 	int GetSize()
 	{
 		return verticesNum;
