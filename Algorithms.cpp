@@ -3,9 +3,9 @@
 
 string Algorithms::ListAlgo(Graph inputGraph)
 {
-	map<int,list<int>> tempList = inputGraph.GetListGraph();
+	map<int, list<int>> tempList = inputGraph.GetListGraph();
 	int** tempMatrice = inputGraph.GetMatriceGraph();
-	for (auto const& firstVertice: tempList)
+	for (auto const& firstVertice : tempList)
 	{
 		for (auto const& currentNeighbour : firstVertice.second)
 		{
@@ -18,8 +18,8 @@ string Algorithms::ListAlgo(Graph inputGraph)
 					if (tempMatrice[thirdVertice][firstVertice.first])
 					{
 						return (to_string(firstVertice.first) + " " +
-							    to_string(neighbourVerticeIterator->first) + " " +
-							    to_string(thirdVertice));
+							to_string(neighbourVerticeIterator->first) + " " +
+							to_string(thirdVertice));
 					}
 				}
 			}
@@ -29,19 +29,17 @@ string Algorithms::ListAlgo(Graph inputGraph)
 	return "NO";
 }
 
-string Algorithms::MatriceAlgo(Graph inputGraph)
+string Algorithms::MatriceAlgo(int **inputMatrice,int size)
 {
-	int** matriceGraph = inputGraph.GetMatriceGraph();
-	int size = inputGraph.GetSize() + 1;
-	int **gPowIn2 = createEmptyMatrice(size);
-	int **gPowIn3 = createEmptyMatrice(size);
+	int** gPowIn2 = utils::createEmptyMatrice(size);
+	int** gPowIn3 = utils::createEmptyMatrice(size);
 	int A = NULL;
 	int B = NULL;
 	int C = NULL;
-	
-	string triangle="";
-	matriceMultiply(gPowIn2, matriceGraph, matriceGraph,size);
-	matriceMultiply(gPowIn3, gPowIn2, matriceGraph,size);
+
+	string triangle = "";
+	matriceMultiply(gPowIn2, inputMatrice, inputMatrice, size);
+	matriceMultiply(gPowIn3, gPowIn2, inputMatrice, size);
 
 	for (int i = 1; i < size; i++)
 	{
@@ -57,12 +55,12 @@ string Algorithms::MatriceAlgo(Graph inputGraph)
 		{
 			if (i != A && gPowIn2[i][A] != 0)
 			{
-				if (matriceGraph[A][i] != 0)
+				if (inputMatrice[A][i] != 0)
 				{
 					B = i;
 					for (int j = 0; j < size; j++)
 					{
-						if (matriceGraph[B][j] != 0 && matriceGraph[j][A] != 0)
+						if (inputMatrice[B][j] != 0 && inputMatrice[j][A] != 0)
 						{
 							C = j;
 							break;
@@ -71,7 +69,7 @@ string Algorithms::MatriceAlgo(Graph inputGraph)
 				}
 			}
 		}
-		triangle = to_string(A) + " " + to_string(B) + " " + to_string(C) + " " + to_string(A);
+		triangle = to_string(A) + " " + to_string(B) + " " + to_string(C);
 	}
 	else triangle = "NO";
 
@@ -81,26 +79,53 @@ string Algorithms::MatriceAlgo(Graph inputGraph)
 	return triangle;
 }
 
-string Algorithms::AYZAlgo(Graph inputGraph)
+string Algorithms::AYZAlgo(Graph inputGraph, int delta)
 {
-	return "NO";
-}
-
-int** Algorithms::createEmptyMatrice(int size)
-{
-	int** mul = new int* [size];
-	for (int i = 0; i < size; i++)
+	int** matrice = inputGraph.GetMatriceGraph();
+	int numOfVartices = inputGraph.GetSize();
+	int* varticesRankArr = inputGraph.GetVerticesRank();
+	int smallKodkods = 0;
+	for (int currV = 1; currV < numOfVartices + 1; currV++)
 	{
-		mul[i] = new int[size];
-		for (int j = 0; j < size; j++)
+		if (varticesRankArr[currV] <= delta)
 		{
-			mul[i][j] = 0;
+			smallKodkods++;
+			vector<int> wList, uList;
+			for (int j = 1; j < numOfVartices + 1; j++)
+			{
+				if (matrice[j][currV] != 0)
+				{
+					uList.push_back(j);
+				}
+				if (matrice[currV][j] != 0)
+				{
+					wList.push_back(j);
+				}
+			}
+			for (int currW : wList)
+			{
+				for (int currU : uList)
+				{
+					if (matrice[currW][currU] != 0)
+					{
+						return (to_string(currU) + " " +
+							to_string(currV) + " " +
+							to_string(currW));
+					}
+				}
+			}
+			uList.clear();
+			wList.clear();
 		}
+
 	}
-	return mul;
+
+	int** deltaGraph = utils::createEmptyMatrice(numOfVartices-smallKodkods+1);
+	int deltaGraphSize=inputGraph.CreateDeltaGraph(deltaGraph, delta);
+	return MatriceAlgo(deltaGraph, deltaGraphSize+1);
 }
 
-void Algorithms::matriceMultiply(int** res,int** m1, int** m2, int size)
+void Algorithms::matriceMultiply(int** res, int** m1, int** m2, int size)
 {
 	for (int i = 0; i < size; i++) {
 		for (int j = 0; j < size; j++) {

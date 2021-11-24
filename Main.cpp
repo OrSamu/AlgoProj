@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <cmath>
 #include "Edge.h"
 #include "Graph.h"
 #include "Algorithms.h"
@@ -49,19 +50,20 @@ int main(int argc, char* argv[])
 	}
 	case 2:
 	{
-		triangleName = algoTool.MatriceAlgo(inputGraph);
+		triangleName = algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(),inputGraph.GetSize()+1);
 		break;
 	}
 	case 3:
 	{
-		triangleName = algoTool.AYZAlgo(inputGraph);
+		int delta = pow(numOfEdges, 0.5);
+		triangleName = algoTool.AYZAlgo(inputGraph,delta);
 		break;
 	}
 	case 4:
 	{
 		algoTool.ListAlgo(inputGraph);
-		algoTool.MatriceAlgo(inputGraph);
-		triangleName = algoTool.AYZAlgo(inputGraph);
+		algoTool.MatriceAlgo(inputGraph.GetMatriceGraph(), inputGraph.GetSize() + 1);
+		triangleName = algoTool.AYZAlgo(inputGraph, pow(numOfEdges, 0.5));
 		break;
 	}
 	default:

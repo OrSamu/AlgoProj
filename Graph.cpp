@@ -5,6 +5,7 @@ Graph::Graph(Edge* edges, int numOfVertice, int numOfEdges)
 	verticesNum = numOfVertice;
 	CreateList(edges, numOfEdges);
 	CreateMatrice(edges, numOfVertice, numOfEdges);
+	filterVertices(edges, numOfVertice, numOfEdges);
 }
 
 Graph::~Graph()
@@ -55,6 +56,8 @@ void Graph::CreateList(Edge* edges, int numOfEdges)
 
 void Graph::CreateMatrice(Edge* edges, int numOfVertices, int numOfEdges)
 {
+
+
 	int allocateSize = numOfVertices + 1;
 	Neighbours_Matrice = new int*[allocateSize];
 	int currSource, currDest;
@@ -75,4 +78,44 @@ void Graph::CreateMatrice(Edge* edges, int numOfVertices, int numOfEdges)
 
 		Neighbours_Matrice[currSource][currDest] = 1;
 	}
+}
+
+void Graph::filterVertices(Edge* edges, int numOfVertice, int numOfEdges)
+{
+	verticesRank = new int[numOfVertice + 1]{};
+	int source, dest;
+	for (int i = 0; i < numOfEdges; i++)
+	{
+		source = edges[i].GetSource();
+		dest = edges[i].GetDest();
+		verticesRank[source]++;
+		verticesRank[dest]++;
+	}
+}
+
+int Graph::CreateDeltaGraph(int** output,int delta) 
+{
+	map<int, int> gTag2gMap;
+	int shift = 0;
+	for (int i = 1; i < verticesNum+1; i++)
+	{
+		if (verticesRank[i] <= delta)
+		{
+			shift++;
+		}
+		else
+		{
+			gTag2gMap.insert(make_pair(i - shift, i));
+		}
+	}
+	
+	for (pair<int, int> currSource : gTag2gMap)
+	{
+		for (pair<int, int> currDest : gTag2gMap)
+		{
+			output[currSource.first][currDest.first] = Neighbours_Matrice[currSource.second][currDest.second];
+		}
+	}
+
+	return gTag2gMap.size();
 }
